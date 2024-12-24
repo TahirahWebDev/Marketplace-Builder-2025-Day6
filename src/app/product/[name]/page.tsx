@@ -3,6 +3,7 @@ import ProductDetail from "@/app/components/ProductDetail";
 import Navbar from "@/app/components/Navbar";
 import Breadcrumb from "@/app/components/Breadcrumb";
 import Footer from "@/app/components/Footer";
+import OurProducts from "@/app/components/OurProducts";
 
 // Mock product data
 const products = [
@@ -68,8 +69,8 @@ const products = [
   }
 ];
 
-const ProductPage = ({ params }: { params: { name: string } }) => {
-  const { name } = params;
+const ProductPage = async({ params }: { params: { name: string } }) => {
+  const { name } = await params;
 
   const product = products.find(
     (prod) => prod.name.toLowerCase() === name.toLowerCase()
@@ -84,6 +85,8 @@ const ProductPage = ({ params }: { params: { name: string } }) => {
       <Navbar />
       <Breadcrumb product={product} />
       <ProductDetail product={product} />
+      <h1 className="mt-5 mb-0 text-4xl text-center font-semibold">Related Products</h1>
+      <OurProducts showButton={true} showHeading={false}/>
       <Footer />
     </div>
   );
