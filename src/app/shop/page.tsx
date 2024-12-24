@@ -10,7 +10,6 @@ import {
   PaginationItem,
   PaginationLink,
   PaginationNext,
-  PaginationEllipsis,
 } from "@/components/ui/pagination";
 import FeatureBar from "../components/FeatureBar";
 

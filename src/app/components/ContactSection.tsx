@@ -110,3 +110,5 @@ const ContactSection = () => {
     </div>
   );
 };
+
+export default ContactSection;

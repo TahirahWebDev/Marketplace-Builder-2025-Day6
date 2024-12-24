@@ -1,10 +1,14 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import ShopHeader from '../components/ShopHeader';
-import FeatureBar from '../components/FeatureBar';
-import Footer from '../components/Footer';
+"use client"
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import ShopHeader from "../components/ShopHeader";
+import FeatureBar from "../components/FeatureBar";
+import Footer from "../components/Footer";
 
 const Checkout = () => {
+  // State for payment method
+  const [paymentMethod, setPaymentMethod] = useState("bank");
+
   return (
     <div>
       {/* Navbar */}
@@ -23,35 +27,47 @@ const Checkout = () => {
             <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* First Name */}
               <div>
-                <label className="block text-sm font-medium mb-1">First Name</label>
+                <label htmlFor="firstName" className="block text-sm font-medium mb-1">
+                  First Name
+                </label>
                 <input
                   type="text"
+                  id="firstName"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Last Name */}
               <div>
-                <label className="block text-sm font-medium mb-1">Last Name</label>
+                <label htmlFor="lastName" className="block text-sm font-medium mb-1">
+                  Last Name
+                </label>
                 <input
                   type="text"
+                  id="lastName"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Company Name */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1">Company Name (Optional)</label>
+                <label htmlFor="company" className="block text-sm font-medium mb-1">
+                  Company Name (Optional)
+                </label>
                 <input
                   type="text"
+                  id="company"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Country/Region */}
               <div>
-                <label className="block text-sm font-medium mb-1">Country / Region</label>
+                <label htmlFor="country" className="block text-sm font-medium mb-1">
+                  Country / Region
+                </label>
                 <select
+                  id="country"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 >
                   <option>Sri Lanka</option>
@@ -60,26 +76,35 @@ const Checkout = () => {
 
               {/* Street Address */}
               <div>
-                <label className="block text-sm font-medium mb-1">Street Address</label>
+                <label htmlFor="address" className="block text-sm font-medium mb-1">
+                  Street Address
+                </label>
                 <input
                   type="text"
+                  id="address"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Town/City */}
               <div>
-                <label className="block text-sm font-medium mb-1">Town / City</label>
+                <label htmlFor="city" className="block text-sm font-medium mb-1">
+                  Town / City
+                </label>
                 <input
                   type="text"
+                  id="city"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Province */}
               <div>
-                <label className="block text-sm font-medium mb-1">Province</label>
+                <label htmlFor="province" className="block text-sm font-medium mb-1">
+                  Province
+                </label>
                 <select
+                  id="province"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 >
                   <option>Western Province</option>
@@ -88,35 +113,47 @@ const Checkout = () => {
 
               {/* ZIP Code */}
               <div>
-                <label className="block text-sm font-medium mb-1">ZIP Code</label>
+                <label htmlFor="zip" className="block text-sm font-medium mb-1">
+                  ZIP Code
+                </label>
                 <input
                   type="text"
+                  id="zip"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium mb-1">Phone</label>
+                <label htmlFor="phone" className="block text-sm font-medium mb-1">
+                  Phone
+                </label>
                 <input
                   type="text"
+                  id="phone"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Email Address */}
               <div>
-                <label className="block text-sm font-medium mb-1">Email Address</label>
+                <label htmlFor="email" className="block text-sm font-medium mb-1">
+                  Email Address
+                </label>
                 <input
                   type="email"
+                  id="email"
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               {/* Additional Information */}
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-1">Additional Information</label>
+                <label htmlFor="additionalInfo" className="block text-sm font-medium mb-1">
+                  Additional Information
+                </label>
                 <textarea
+                  id="additionalInfo"
                   rows={4}
                   className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
                 ></textarea>
@@ -149,11 +186,25 @@ const Checkout = () => {
               <label className="block text-sm font-medium mb-2">Payment Method</label>
               <div className="space-y-2">
                 <div className="flex items-center">
-                  <input type="radio" name="payment" className="mr-2" checked />
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="bank"
+                    className="mr-2"
+                    checked={paymentMethod === "bank"}
+                    onChange={() => setPaymentMethod("bank")}
+                  />
                   <span>Direct Bank Transfer</span>
                 </div>
                 <div className="flex items-center">
-                  <input type="radio" name="payment" className="mr-2" />
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="cod"
+                    className="mr-2"
+                    checked={paymentMethod === "cod"}
+                    onChange={() => setPaymentMethod("cod")}
+                  />
                   <span>Cash On Delivery</span>
                 </div>
               </div>

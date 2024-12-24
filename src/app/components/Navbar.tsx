@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaUser, FaSearch, FaHeart, FaShoppingCart } from 'react-icons/fa';
 import Image from 'next/image';
+import Link from 'next/link'
 
 const Navbar = () => {
   return (
@@ -19,18 +20,18 @@ const Navbar = () => {
 
       {/* Navbar */}
       <nav className="flex items-center space-x-10">
-        <a href="/" className="text-black font-medium hover:underline">
+        <Link href="/" className="text-black font-medium hover:underline">
           Home
-        </a>
-        <a href="shop" className="text-black font-medium hover:underline">
+        </Link>
+        <Link href="shop" className="text-black font-medium hover:underline">
           Shop
-        </a>
-        <a href="/blog" className="text-black font-medium hover:underline">
+        </Link>
+        <Link href="/blog" className="text-black font-medium hover:underline">
           Blog
-        </a>
-        <a href="/contact" className="text-black font-medium hover:underline">
+        </Link>
+        <Link href="/contact" className="text-black font-medium hover:underline">
           Contact
-        </a>
+        </Link>
       </nav>
 
       {/* Icons */}

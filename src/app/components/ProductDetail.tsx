@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 import Link from "next/link";
-import Sidebar from "./Sidebar"; // Import Sidebar
-import OurProducts from "./OurProducts";
+import Sidebar from "../components/Sidebar";
 
 interface Product {
   name: string;
@@ -22,8 +21,10 @@ interface ProductDetailProps {
 const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("Description");
-  const [cartItems, setCartItems] = useState<{ name: string; price: string; quantity: number }[]>([]); // Cart items state with correct type
-  const [isSidebarVisible, setSidebarVisible] = useState(false); // Sidebar visibility state
+  const [cartItems, setCartItems] = useState<
+    { name: string; price: number; quantity: number }[]
+  >([]);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
 
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
   const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -33,7 +34,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const handleAddToCart = () => {
     const cartItem = {
       name: product.name,
-      price: product.price,
+      price: parseFloat(product.price), // Ensure price is a valid number
       quantity,
     };
     setCartItems((prevItems) => [...prevItems, cartItem]);
@@ -163,9 +164,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={`text-lg font-semibold ${
-                activeTab === tab ? "text-black" : "text-gray-500"
-              }`}
+              className={`text-lg font-semibold ${activeTab === tab ? "text-black" : "text-gray-500"}`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
@@ -195,8 +194,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
       <Sidebar
         show={isSidebarVisible}
         onClose={() => setSidebarVisible(false)}
-        cartItems={cartItems} 
-        removeItem={handleRemoveItem} 
+        cartItems={cartItems}
+        removeItem={handleRemoveItem}
       />
     </div>
   );
