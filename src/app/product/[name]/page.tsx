@@ -66,11 +66,11 @@ const products = [
     price: "Rp 500.000",
     discount: "New",
     image: "/product8.jpg",
-  }
+  },
 ];
 
-const ProductPage = async({ params }: { params: { name: string } }) => {
-  const { name } = await params;
+const ProductPage = async ({ params }: { params: { name: string } }) => {
+  const { name } = await params; // Await the params object
 
   const product = products.find(
     (prod) => prod.name.toLowerCase() === name.toLowerCase()
@@ -86,7 +86,7 @@ const ProductPage = async({ params }: { params: { name: string } }) => {
       <Breadcrumb product={product} />
       <ProductDetail product={product} />
       <h1 className="mt-5 mb-0 text-4xl text-center font-semibold">Related Products</h1>
-      <OurProducts showButton={true} showHeading={false}/>
+      <OurProducts showButton={true} showHeading={false} />
       <Footer />
     </div>
   );

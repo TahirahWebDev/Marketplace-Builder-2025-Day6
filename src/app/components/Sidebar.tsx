@@ -68,17 +68,11 @@ const Sidebar: React.FC<SidebarProps> = ({ show, onClose, cartItems, removeItem 
               >
                 {/* Item Info */}
                 <div className="flex items-center space-x-4">
-                  <img
-                    src={`/${item.name.toLowerCase().replace(" ", "-")}.jpg`}
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <div>
+                 
                     <h3 className="font-semibold text-gray-800">{item.name}</h3>
                     <p className="text-sm text-gray-600">
                       {item.quantity} x Rs. {item.price.toLocaleString()}
                     </p>
-                  </div>
                 </div>
 
                 {/* Remove Button */}
@@ -111,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({ show, onClose, cartItems, removeItem 
             Checkout
           </button>
           <button
-            onClick={() => window.location.href = "/comparison"}
+            onClick={() => window.location.href = "/productComparison"}
             className="w-full py-3 bg-yellow-600 text-white font-semibold rounded hover:bg-yellow-700"
           >
             Comparison
