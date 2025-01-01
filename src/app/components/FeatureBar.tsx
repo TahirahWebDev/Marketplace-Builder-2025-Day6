@@ -27,9 +27,12 @@ const FeatureBar = () => {
   ];
 
   return (
-    <div className="flex justify-between items-center w-full bg-[#fdf6ee] mt-12 mb-8 py-8 px-16">
+    <div className="flex flex-col md:flex-row justify-between items-center w-full bg-[#fdf6ee] mt-12 mb-8 py-8 px-4 md:px-16">
       {features.map((feature, index) => (
-        <div key={index} className="flex flex-col items-center text-center space-y-2">
+        <div
+          key={index}
+          className="flex flex-col items-center text-center space-y-2 mb-6 md:mb-0"
+        >
           <div>{feature.icon}</div>
           <h3 className="text-black font-semibold text-lg">{feature.title}</h3>
           <p className="text-gray-600 text-sm">{feature.description}</p>

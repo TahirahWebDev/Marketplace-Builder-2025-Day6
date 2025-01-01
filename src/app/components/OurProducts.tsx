@@ -84,7 +84,7 @@ const OurProducts: React.FC<OurProductsProps> = ({
       price: "Rp 500.000",
       discount: "New",
       image: "/product8.jpg",
-    }
+    },
   ];
 
   const handleAddToCart = (product: Product) => {
@@ -92,12 +92,12 @@ const OurProducts: React.FC<OurProductsProps> = ({
   };
 
   return (
-    <section className="w-[1236px] h-auto mx-auto mt-16 p-6">
+    <section className="max-w-screen-xl mx-auto mt-16 px-4 sm:px-6">
       {showHeading && (
         <h2 className="text-3xl font-bold text-center mb-8">Our Products</h2>
       )}
 
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product, index) => (
           <div
             key={index}

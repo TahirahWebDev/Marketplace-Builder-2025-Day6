@@ -6,14 +6,14 @@ const Banner = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src="/banner.jpg" // Image placed in the `public/` folder
+          src="/banner.jpg"
           alt="Banner Background"
           className="w-full h-full object-cover"
         />
       </div>
 
       {/* Content Section */}
-      <div className="absolute left-[60%] top-[40%] transform -translate-y-[40%] bg-[#FFF3e3] p-8 rounded-md shadow-lg w-[400px]">
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:left-[60%] sm:top-[40%] sm:transform sm:-translate-y-[40%] bg-[#FFF3e3] p-8 rounded-md shadow-lg w-[90%] sm:w-[400px]">
         <p className="text-sm font-medium text-gray-600">New Arrival</p>
         <h1 className="text-4xl font-bold text-yellow-800 mt-2 leading-snug">
           Discover Our <br /> New Collection

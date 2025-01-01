@@ -78,7 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ show, onClose, cartItems, removeItem 
                 {/* Remove Button */}
                 <button
                   onClick={() => removeItem(item.name)}
-                  className="text-red-600 text-lg"
+                  className="text-black-600 text-lg"
                 >
                   <FaTimes />
                 </button>
