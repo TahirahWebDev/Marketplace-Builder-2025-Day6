@@ -19,8 +19,8 @@ const Shop = () => {
       <Navbar />
       <ShopHeader title="Shop" breadcrumb="Shop" />
       <FilterBar />
-      <OurProducts showHeading={false} showButton={false} />
-      <OurProducts showHeading={false} showButton={false} />
+      <OurProducts showHeading={false} />
+      <OurProducts showHeading={false} />
       
       <Pagination>
         <PaginationContent>
