@@ -1,13 +1,35 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import ShopHeader from "../components/ShopHeader";
 import FeatureBar from "../components/FeatureBar";
 import Footer from "../components/Footer";
 
 const Checkout = () => {
-  // State for payment method
-  const [paymentMethod, setPaymentMethod] = useState("bank");
+  const [cartItems, setCartItems] = useState<any[]>([]);
+
+  // Extract cartItems from URL query when the page loads
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cartItemsParam = urlParams.get("cartItems");
+
+      if (cartItemsParam) {
+        try {
+          const parsedItems = JSON.parse(cartItemsParam);
+          setCartItems(parsedItems);
+        } catch (error) {
+          console.error("Error parsing cart items:", error);
+        }
+      }
+    }
+  }, []);
+
+  // Calculate the total
+  const total = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   return (
     <div>
@@ -167,21 +189,28 @@ const Checkout = () => {
 
             {/* Order Details */}
             <div className="mb-6">
-              <div className="flex justify-between mb-2">
-                <span>Asgaard sofa x 1</span>
-                <span>Rs. 250,000.00</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span>Subtotal</span>
-                <span>Rs. 250,000.00</span>
-              </div>
-              <div className="flex justify-between font-bold text-lg">
+              {cartItems.length > 0 ? (
+                cartItems.map((item, index) => (
+                  <div key={index} className="flex justify-between mb-2">
+                    <span>
+                      {item.name} x {item.quantity}
+                    </span>
+                    <span>Rs. {item.price * item.quantity}</span>
+                  </div>
+                ))
+              ) : (
+                <p>Your cart is empty.</p>
+              )}
+
+              <div className="flex justify-between font-bold text-lg mt-6">
                 <span>Total</span>
-                <span className="text-orange-500">Rs. 250,000.00</span>
+                <span className="text-orange-500">
+                  Rs. {total.toLocaleString()}
+                </span>
               </div>
             </div>
 
-            {/* Payment Method */}
+            {/* Payment Method and Place Order Button */}
             <div className="mb-6">
               <label className="block text-sm font-medium mb-2">Payment Method</label>
               <div className="space-y-2">
@@ -191,8 +220,6 @@ const Checkout = () => {
                     name="payment"
                     value="bank"
                     className="mr-2"
-                    checked={paymentMethod === "bank"}
-                    onChange={() => setPaymentMethod("bank")}
                   />
                   <span>Direct Bank Transfer</span>
                 </div>
@@ -202,8 +229,6 @@ const Checkout = () => {
                     name="payment"
                     value="cod"
                     className="mr-2"
-                    checked={paymentMethod === "cod"}
-                    onChange={() => setPaymentMethod("cod")}
                   />
                   <span>Cash On Delivery</span>
                 </div>

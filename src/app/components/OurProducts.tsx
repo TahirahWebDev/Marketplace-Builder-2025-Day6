@@ -1,16 +1,16 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@sanity/client";
 
 interface Product {
-  name: string;
-  description: string;
-  price: string;
-  originalPrice?: string;
-  discount?: string;
-  image: string;
+  _id: string;
+  title: string;
+  price: number;
+  discountPercentage?: number;
+  isNew?: boolean;
+  productImage: string;
 }
 
 interface OurProductsProps {
@@ -18,77 +18,41 @@ interface OurProductsProps {
   showButton: boolean;
 }
 
-const OurProducts: React.FC<OurProductsProps> = ({
-  showHeading,
-  showButton,
-}) => {
+// Configure the Sanity client
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  useCdn: true,
+  apiVersion: "2025-01-13",
+});
+
+const OurProducts: React.FC<OurProductsProps> = ({ showHeading, showButton }) => {
+  const [products, setProducts] = useState<Product[]>([]);
   const router = useRouter();
 
-  const products: Product[] = [
-    {
-      name: "Syltherine",
-      description: "Stylish cafe chair",
-      price: "Rp 2.500.000",
-      originalPrice: "Rp 3.500.000",
-      discount: "-30%",
-      image: "/product1.png",
-    },
-    {
-      name: "Leviosa",
-      description: "Stylish cafe chair",
-      price: "Rp 2.500.000",
-      discount: "",
-      image: "/product8.jpg",
-    },
-    {
-      name: "Lolito",
-      description: "Luxury big sofa",
-      price: "Rp 7.000.000",
-      originalPrice: "Rp 14.000.000",
-      discount: "-50%",
-      image: "/product3.png",
-    },
-    {
-      name: "Respira",
-      description: "Outdoor bar table and stool",
-      price: "Rp 500.000",
-      discount: "New",
-      image: "/product4.jpg",
-    },
-    {
-      name: "Syltherine",
-      description: "Stylish cafe chair",
-      price: "Rp 2.500.000",
-      originalPrice: "Rp 3.500.000",
-      discount: "-30%",
-      image: "/product5.png",
-    },
-    {
-      name: "Leviosa",
-      description: "Stylish cafe chair",
-      price: "Rp 2.500.000",
-      discount: "",
-      image: "/product6.png",
-    },
-    {
-      name: "Lolito",
-      description: "Luxury big sofa",
-      price: "Rp 7.000.000",
-      originalPrice: "Rp 14.000.000",
-      discount: "-50%",
-      image: "/product7.jpg",
-    },
-    {
-      name: "Respira",
-      description: "Outdoor bar table and stool",
-      price: "Rp 500.000",
-      discount: "New",
-      image: "/product8.jpg",
-    },
-  ];
+  useEffect(() => {
+    // Fetch products from Sanity
+    const fetchProducts = async () => {
+      const query = `
+        *[_type == "product"]{
+          _id,
+          title,
+          price,
+          discountPercentage,
+          isNew,
+          "productImage": productImage.asset->url
+        }
+      `;
 
-  const handleAddToCart = (product: Product) => {
-    router.push(`/product/${product.name}`);
+      const data = await client.fetch(query);
+      setProducts(data);
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleAddToCart = (productId: string) => {
+    router.push(`/product/${productId}`);
   };
 
   return (
@@ -98,22 +62,22 @@ const OurProducts: React.FC<OurProductsProps> = ({
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product, index) => (
+        {products.map((product) => (
           <div
-            key={index}
+            key={product._id}
             className="relative bg-white rounded-lg shadow hover:shadow-lg transition group overflow-hidden"
           >
             <div className="relative">
-              <Image
-                src={product.image}
-                alt={product.name}
+              <img
+                src={product.productImage}
+                alt={product.title}
                 width={285}
                 height={300}
                 className="w-full h-[300px] object-cover rounded-t-lg"
               />
               <div className="absolute inset-0 bg-black bg-opacity-70 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center">
                 <button
-                  onClick={() => handleAddToCart(product)}
+                  onClick={() => handleAddToCart(product._id)}
                   className="px-6 py-2 bg-gold-500 text-white rounded-lg mt-20 mb-2"
                 >
                   Add to cart
@@ -122,34 +86,25 @@ const OurProducts: React.FC<OurProductsProps> = ({
             </div>
 
             <div className="p-4 group-hover:bg-black group-hover:bg-opacity-80 group-hover:text-white transition duration-300">
-              <h3 className="font-semibold text-lg">{product.name}</h3>
-              <p className="text-gray-500 group-hover:text-gray-300">
-                {product.description}
-              </p>
+              <h3 className="font-semibold text-lg">{product.title}</h3>
               <div className="flex justify-between items-center mt-4">
-                <span className="text-gold-500 font-bold">{product.price}</span>
-                {product.originalPrice && (
-                  <span className="line-through text-gray-400 group-hover:text-gray-500">
-                    {product.originalPrice}
+                <span className="text-gold-500 font-bold">Rp {product.price}</span>
+                {product.discountPercentage && (
+                  <span className="text-red-500">
+                    -{product.discountPercentage}%
                   </span>
                 )}
               </div>
             </div>
 
-            {product.discount && (
-              <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 text-sm rounded-full">
-                {product.discount}
+            {product.isNew && (
+              <div className="absolute top-4 right-4 bg-green-500 text-white px-2 py-1 text-sm rounded-full">
+                New
               </div>
             )}
           </div>
         ))}
       </div>
-
-      {showButton && (
-        <button className="block mx-auto mt-8 px-6 py-3 text-[#B88E2F] border-[#B88E2F] hover:text-white rounded-lg hover:bg-[#B88E2F]">
-          Show More
-        </button>
-      )}
     </section>
   );
 };

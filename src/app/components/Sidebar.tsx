@@ -18,40 +18,44 @@ const Sidebar: React.FC<SidebarProps> = ({ show, onClose, cartItems, removeItem 
         onClose();
       }
     };
+
     if (show) {
       document.addEventListener("mousedown", handleClickOutside);
     }
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [show, onClose]);
+  }, [show, onClose]); // Added 'onClose' to dependencies to avoid potential issues
 
   // Calculate subtotal
   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
+  const handleClose = () => {
+    // Delay hiding the sidebar to allow the animation to complete
+    setTimeout(() => {
+      onClose();
+    }, 300); // 300ms delay (adjust to match the duration of the animation)
+  };
+
   return (
     <div
-      className={`fixed inset-0 z-50 transition-all duration-300 ${
-        show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-50 transition-all duration-300 ${show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
     >
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-          show ? "opacity-50" : "opacity-0"
-        }`}
-        onClick={onClose}
+        className={`fixed inset-0 bg-black transition-opacity duration-300 ${show ? "opacity-50" : "opacity-0"}`}
+        onClick={handleClose}
+        aria-label="Close Sidebar" // Added aria-label for better accessibility
       ></div>
 
       {/* Sidebar Content */}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 right-0 w-[368px] h-full bg-white shadow-lg p-6 transition-transform duration-300 ${
-          show ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 w-[368px] h-full bg-white shadow-lg p-6 transition-transform duration-300 ${show ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Close Button */}
         <div className="flex justify-end">
-          <button onClick={onClose} className="text-2xl text-gray-700">
-            &times;
+          <button onClick={handleClose} className="text-2xl text-gray-700" aria-label="Close Sidebar">
+            <FaTimes />
           </button>
         </div>
 
@@ -62,23 +66,16 @@ const Sidebar: React.FC<SidebarProps> = ({ show, onClose, cartItems, removeItem 
         <div className="space-y-4">
           {cartItems.length > 0 ? (
             cartItems.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between border-b pb-4"
-              >
-                {/* Item Info */}
+              <div key={index} className="flex items-center justify-between border-b pb-4">
                 <div className="flex items-center space-x-4">
-                 
-                    <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                    <p className="text-sm text-gray-600">
-                      {item.quantity} x Rs. {item.price.toLocaleString()}
-                    </p>
+                  <h3 className="font-semibold text-gray-800">{item.name}</h3>
+                  <p className="text-sm text-gray-600">{item.quantity} x Rs. {item.price.toLocaleString()}</p>
                 </div>
 
-                {/* Remove Button */}
                 <button
                   onClick={() => removeItem(item.name)}
                   className="text-black-600 text-lg"
+                  aria-label={`Remove ${item.name} from cart`} // Added aria-label for better accessibility
                 >
                   <FaTimes />
                 </button>
@@ -101,14 +98,9 @@ const Sidebar: React.FC<SidebarProps> = ({ show, onClose, cartItems, removeItem 
           <button
             onClick={() => window.location.href = "/checkout"}
             className="w-full py-3 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700"
+            aria-label="Proceed to checkout" // Added aria-label for better accessibility
           >
             Checkout
-          </button>
-          <button
-            onClick={() => window.location.href = "/productComparison"}
-            className="w-full py-3 bg-yellow-600 text-white font-semibold rounded hover:bg-yellow-700"
-          >
-            Comparison
           </button>
         </div>
       </div>
