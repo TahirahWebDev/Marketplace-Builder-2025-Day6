@@ -50,7 +50,7 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       <h1 className="mt-5 mb-0 text-4xl text-center font-semibold">
         Related Products
       </h1>
-      <OurProducts showButton={true} showHeading={false} />
+      <OurProducts showHeading={false} />
       <Footer />
     </div>
   );

@@ -15,7 +15,6 @@ interface Product {
 
 interface OurProductsProps {
   showHeading: boolean;
-  showButton: boolean;
 }
 
 // Configure the Sanity client
@@ -26,7 +25,7 @@ const client = createClient({
   apiVersion: "2025-01-13",
 });
 
-const OurProducts: React.FC<OurProductsProps> = ({ showHeading, showButton }) => {
+const OurProducts: React.FC<OurProductsProps> = ({ showHeading }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const router = useRouter();
 

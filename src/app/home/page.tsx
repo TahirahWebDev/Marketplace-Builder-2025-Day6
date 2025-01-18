@@ -29,7 +29,7 @@ const Home = async () => {
       <Navbar />
       <Banner />
       <BrowseRange data={result || []} /> {/* Pass data prop to BrowseRange */}
-      <OurProducts showHeading={true} showButton={true} />
+      <OurProducts showHeading={true} />
       <Gallery />
       <Footer />
     </div>
