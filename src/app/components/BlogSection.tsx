@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 type Post = {
@@ -34,7 +35,9 @@ const BlogSection: React.FC<BlogProps> = ({ posts }) => {
                 <span>{new Date(post._createdAt).toLocaleDateString()}</span>
               </div>
               <p className="text-gray-700 mb-4">{post.bio}</p>
-              <a href="/" className="text-blue-500 font-medium">Read more</a>
+              <Link href='/' className="text-blue-500 font-medium">
+              Read more
+              </Link>
             </div>
           </div>
         ))}
