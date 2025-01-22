@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const withAuth = (Component: React.FC) => {
-  return (props: any) => {
+  const WrappedComponent = (props: any) => {
     const router = useRouter();
 
     useEffect(() => {
@@ -15,6 +15,11 @@ const withAuth = (Component: React.FC) => {
 
     return <Component {...props} />;
   };
+
+  // Set the display name for the wrapped component
+  WrappedComponent.displayName = `withAuth(${Component.displayName || Component.name})`;
+
+  return WrappedComponent;
 };
 
 export default withAuth;
