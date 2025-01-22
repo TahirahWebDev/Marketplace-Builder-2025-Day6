@@ -25,7 +25,7 @@ const Wishlist: React.FC = () => {
     <>
       <Navbar />
       <ShopHeader title="Wishlist" breadcrumb="wishlist" />
-      <div className="min-h-screen px-6 pb-0 flex flex-col">
+      <div className="min-h-screen px-6 pb-0 mt-6 flex flex-col">
         {wishlist.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {wishlist.map((product, index) => (
@@ -60,7 +60,7 @@ const Wishlist: React.FC = () => {
                       JSON.stringify(updatedWishlist)
                     );
                   }}
-                  className="absolute top-3 right-4 bg-red-500 text-white rounded-full px-2 shadow-md hover:bg-red-600 transition"
+                  className="absolute top-3 right-3 bg-red-500 text-white rounded-full px-2 shadow-md hover:bg-red-600 transition"
                 >
                   ✕
                 </button>
