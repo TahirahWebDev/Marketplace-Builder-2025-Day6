@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FeatureBar from "../components/FeatureBar";
-import withAuth from "../hoc/page";
 import ShopHeader from "../components/ShopHeader";
 import Analytics from "../components/Analytics";
 import ManageProducts from "../components/ManageProducts";
@@ -63,4 +62,5 @@ const AdminDashboard: React.FC = () => {
   );
 };
 
-export default withAuth(AdminDashboard);
+// Export directly as the default Next.js page component
+export default AdminDashboard;
