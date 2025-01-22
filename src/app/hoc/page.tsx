@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+// The higher-order component (HOC) with authentication
 const withAuth = (Component: React.FC) => {
   const WrappedComponent = (props: any) => {
     const router = useRouter();
@@ -22,4 +23,10 @@ const withAuth = (Component: React.FC) => {
   return WrappedComponent;
 };
 
-export default withAuth;
+// Your page component (could be any page component)
+const Page = () => {
+  return <div>Welcome to the Protected Page!</div>;
+};
+
+// Wrap the page component with `withAuth`
+export default withAuth(Page);
