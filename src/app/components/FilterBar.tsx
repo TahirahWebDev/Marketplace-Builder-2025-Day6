@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Product {
   _id: string;
@@ -19,18 +19,29 @@ interface FilterBarProps {
 
 const FilterBar: React.FC<FilterBarProps> = ({ products, onFilter }) => {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLowerCase();
-    setSearch(value);
+  // Debounce the search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500); // Wait for 500ms after the user stops typing
 
+    return () => clearTimeout(timer); // Clear timeout if the component unmounts or search changes
+  }, [search]);
+
+  useEffect(() => {
+    // Filter the products based on the debounced search term
     const filtered = products.filter(
       (product) =>
-        product.title.toLowerCase().includes(value) ||
-        (product.tags?.some((tag) => tag.toLowerCase().includes(value)) ?? false)
+        product.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        (product.tags?.some((tag) => tag.toLowerCase().includes(debouncedSearch.toLowerCase())) ?? false)
     );
-
     onFilter(filtered);
+  }, [debouncedSearch, products, onFilter]); // Re-run the filter when debouncedSearch or products change
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value); // Update the search term immediately
   };
 
   return (
@@ -46,6 +57,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ products, onFilter }) => {
         <button
           onClick={() => {
             setSearch("");
+            setDebouncedSearch(""); // Clear both search and debounced search
             onFilter(products); // Reset filter on clear
           }}
           className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition duration-200"

@@ -42,7 +42,6 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     );
   }
 
-  // Fetch related products based on some criteria (e.g., same category)
   const relatedProductsQuery = `
     *[_type == "product" && _id != $id]{
       _id,
@@ -66,7 +65,11 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       </h1>
       
       {/* Display related products */}
-      <OurProducts products={relatedProducts || []} showHeading={false} />
+      <OurProducts
+  products={relatedProducts || []}
+  isLoading={!relatedProducts} // Assume loading if relatedProducts is not yet available
+  showHeading={false}
+/>
       
       <Footer />
     </div>

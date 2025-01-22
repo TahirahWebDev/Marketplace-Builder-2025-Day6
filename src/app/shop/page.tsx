@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from "react";
 import { createClient } from "@sanity/client";
@@ -7,18 +7,21 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ShopHeader from "../components/ShopHeader";
 import FeatureBar from "../components/FeatureBar";
-import OurProducts from "../components/OurProducts"; // Importing OurProducts component
+import OurProducts from "../components/OurProducts";
+
+// src/types.ts
 
 interface Product {
   _id: string;
   title: string;
-  tags: string[];
+  tags?: string[]; // Updated to make tags optional
   price: number;
   discountPercentage?: number;
   isNew?: boolean;
   productImage: string;
   stockStatus: "in-stock" | "out-of-stock";
 }
+
 
 const productsQuery = `*[_type == "product"]{
   _id,
@@ -38,6 +41,7 @@ const client = createClient({
 });
 
 const Shop = () => {
+  const [isLoading, setIsLoading] = useState(true); 
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
@@ -46,6 +50,7 @@ const Shop = () => {
       const data: Product[] = await client.fetch(productsQuery);
       setProducts(data);
       setFilteredProducts(data);
+      setIsLoading(false);
     };
 
     fetchProducts();
@@ -53,22 +58,17 @@ const Shop = () => {
 
   return (
     <div>
-      {/* Navbar */}
       <Navbar />
-
-      {/* Shop Header */}
       <ShopHeader title="Shop" breadcrumb="Shop" />
-
-      {/* Filter Bar */}
       <FilterBar products={products} onFilter={setFilteredProducts} />
 
-      {/* Display filtered products using OurProducts component */}
-      <OurProducts products={filteredProducts} showHeading={false} />
+      <OurProducts
+        products={filteredProducts}
+        isLoading={isLoading}
+        showHeading={false}
+      />
 
-      {/* Feature Bar */}
       <FeatureBar />
-
-      {/* Footer */}
       <Footer />
     </div>
   );

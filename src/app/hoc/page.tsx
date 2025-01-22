@@ -23,7 +23,6 @@ const withAuth = (Component: React.FC) => {
   return WrappedComponent;
 };
 
-// Your page component (could be any page component)
 const Page = () => {
   return <div>Welcome to the Protected Page!</div>;
 };
