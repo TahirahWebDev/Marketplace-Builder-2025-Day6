@@ -81,10 +81,12 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
       );
       localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
       setIsInWishlist(false);
+      toast.error(`${product.title} removed from wishlist.`);
     } else {
       const updatedWishlist = [...wishlist, product];
       localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
       setIsInWishlist(true);
+      toast.success(`${product.title} added to wishlist!`);
     }
   };
 

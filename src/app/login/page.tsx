@@ -1,6 +1,9 @@
 "use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -24,14 +27,22 @@ const LoginPage: React.FC = () => {
       password === adminCredentials.password
     ) {
       localStorage.setItem("isAdmin", "true"); // Set session flag
-      router.push("/dashboard"); // Navigate to admin page
+
+      // Show success toast
+      toast.success("Login successful! Redirecting to the dashboard...");
+
+      setTimeout(() => {
+        router.push("/dashboard"); // Navigate to admin page
+      }, 2000); // Delay to allow the toast to display
     } else {
       setError("Invalid username or password");
+      toast.error("Invalid username or password"); // Show error toast
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <ToastContainer />
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">Admin Login</h2>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

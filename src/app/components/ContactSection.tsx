@@ -1,9 +1,64 @@
-import React from 'react';
-import { FaMapMarkerAlt, FaPhoneAlt, FaClock } from 'react-icons/fa';
+"use client";
+import React, { useState } from "react";
+import { FaMapMarkerAlt, FaPhoneAlt, FaClock } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    message: false,
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Reset errors
+    setErrors({
+      name: false,
+      email: false,
+      message: false,
+    });
+
+    const { name, email, message } = formData;
+    const newErrors = {
+      name: !name.trim(),
+      email: !validateEmail(email),
+      message: !message.trim(),
+    };
+
+    setErrors(newErrors);
+
+    // If no errors, show success toast
+    if (!Object.values(newErrors).some((error) => error)) {
+      toast.success("Message sent successfully!");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } else {
+      toast.error("Please fill in all required fields correctly.");
+    }
+  };
+
   return (
     <div className="py-16 bg-gray-50">
+      <ToastContainer />
       <div className="container mx-auto px-4">
         {/* Title Section */}
         <div className="text-center">
@@ -50,7 +105,7 @@ const ContactSection = () => {
 
           {/* Right Section: Contact Form */}
           <div className="bg-white p-8 rounded-lg shadow-md">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Name Field */}
               <div>
                 <label
@@ -63,8 +118,13 @@ const ContactSection = () => {
                   type="text"
                   id="name"
                   placeholder="John Doe"
-                  className="mt-2 block w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#B88E2F]"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={`mt-2 block w-full border ${
+                    errors.name ? "border-red-500" : "border-gray-300"
+                  } rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#B88E2F]`}
                 />
+                {errors.name && <p className="text-red-500 text-sm">Name is required.</p>}
               </div>
               {/* Email Field */}
               <div>
@@ -78,8 +138,13 @@ const ContactSection = () => {
                   type="email"
                   id="email"
                   placeholder="john@example.com"
-                  className="mt-2 block w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#B88E2F]"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`mt-2 block w-full border ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  } rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#B88E2F]`}
                 />
+                {errors.email && <p className="text-red-500 text-sm">Valid email is required.</p>}
               </div>
               {/* Subject Field */}
               <div>
@@ -93,6 +158,8 @@ const ContactSection = () => {
                   type="text"
                   id="subject"
                   placeholder="Optional Subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   className="mt-2 block w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#B88E2F]"
                 />
               </div>
@@ -108,8 +175,13 @@ const ContactSection = () => {
                   id="message"
                   placeholder="Hi! I’d like to ask about..."
                   rows={4}
-                  className="mt-2 block w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#B88E2F]"
+                  value={formData.message}
+                  onChange={handleChange}
+                  className={`mt-2 block w-full border ${
+                    errors.message ? "border-red-500" : "border-gray-300"
+                  } rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#B88E2F]`}
                 />
+                {errors.message && <p className="text-red-500 text-sm">Message is required.</p>}
               </div>
               {/* Submit Button */}
               <div>
