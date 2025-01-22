@@ -1,249 +1,158 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";  // Import toastify styles
 import Navbar from "../components/Navbar";
 import ShopHeader from "../components/ShopHeader";
 import FeatureBar from "../components/FeatureBar";
 import Footer from "../components/Footer";
 
 const Checkout = () => {
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<
+    { name: string; price: number; quantity: number }[]
+  >([]);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Extract cartItems from URL query when the page loads
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      const cartItemsParam = urlParams.get("cartItems");
-
-      if (cartItemsParam) {
-        try {
-          const parsedItems = JSON.parse(cartItemsParam);
-          setCartItems(parsedItems);
-        } catch (error) {
-          console.error("Error parsing cart items:", error);
-        }
-      }
+      const savedCartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      setCartItems(savedCartItems);
     }
   }, []);
 
-  // Calculate the total
   const total = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (acc, item) => acc + item.price * item.quantity,
     0
   );
 
-  return (
-    <div>
-      {/* Navbar */}
-      <Navbar />
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
-      {/* Header Section */}
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!formData.firstName.trim()) newErrors.firstName = "First Name is required.";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last Name is required.";
+    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Valid Email is required.";
+    if (!formData.phone.trim() || !/^\d+$/.test(formData.phone))
+      newErrors.phone = "Valid Phone Number is required.";
+    if (!formData.address.trim()) newErrors.address = "Address is required.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateForm()) {
+      // Show a success toast notification
+      toast.success("Your order has been placed successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      // Optionally, you can clear the cart and form data after successful submission
+      setCartItems([]);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        address: "",
+      });
+      localStorage.removeItem("cartItems"); // Clear cart from localStorage
+    }
+  };
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      <Navbar />
       <ShopHeader title="Checkout" breadcrumb="Checkout" />
 
-      {/* Main Checkout Section */}
-      <div className="bg-gray-50 py-10">
-        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 px-4">
-
-          {/* Billing Details Form */}
-          <div className="bg-white p-8 shadow-md rounded-md">
-            <h2 className="text-xl font-bold mb-6">Billing details</h2>
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* First Name */}
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium mb-1">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Last Name */}
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium mb-1">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Company Name */}
-              <div className="md:col-span-2">
-                <label htmlFor="company" className="block text-sm font-medium mb-1">
-                  Company Name (Optional)
-                </label>
-                <input
-                  type="text"
-                  id="company"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Country/Region */}
-              <div>
-                <label htmlFor="country" className="block text-sm font-medium mb-1">
-                  Country / Region
-                </label>
-                <select
-                  id="country"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                >
-                  <option>Sri Lanka</option>
-                </select>
-              </div>
-
-              {/* Street Address */}
-              <div>
-                <label htmlFor="address" className="block text-sm font-medium mb-1">
-                  Street Address
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Town/City */}
-              <div>
-                <label htmlFor="city" className="block text-sm font-medium mb-1">
-                  Town / City
-                </label>
-                <input
-                  type="text"
-                  id="city"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Province */}
-              <div>
-                <label htmlFor="province" className="block text-sm font-medium mb-1">
-                  Province
-                </label>
-                <select
-                  id="province"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                >
-                  <option>Western Province</option>
-                </select>
-              </div>
-
-              {/* ZIP Code */}
-              <div>
-                <label htmlFor="zip" className="block text-sm font-medium mb-1">
-                  ZIP Code
-                </label>
-                <input
-                  type="text"
-                  id="zip"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium mb-1">
-                  Phone
-                </label>
-                <input
-                  type="text"
-                  id="phone"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Email Address */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              {/* Additional Information */}
-              <div className="md:col-span-2">
-                <label htmlFor="additionalInfo" className="block text-sm font-medium mb-1">
-                  Additional Information
-                </label>
-                <textarea
-                  id="additionalInfo"
-                  rows={4}
-                  className="w-full border rounded-md p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                ></textarea>
-              </div>
+      <div className="py-10">
+        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 px-4">
+          {/* Billing Details Section */}
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-2xl font-semibold mb-6">Billing Details</h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {[ 
+                { label: "First Name", id: "firstName", type: "text" },
+                { label: "Last Name", id: "lastName", type: "text" },
+                { label: "Email Address", id: "email", type: "email" },
+                { label: "Phone Number", id: "phone", type: "text" },
+                { label: "Address", id: "address", type: "text" },
+              ].map(({ label, id, type }) => (
+                <div key={id}>
+                  <label htmlFor={id} className="block text-sm font-medium mb-2">
+                    {label}
+                  </label>
+                  <input
+                    type={type}
+                    id={id}
+                    value={formData[id]}
+                    onChange={handleChange}
+                    className={`w-full border rounded-lg p-3 text-sm focus:ring-2 ${
+                      errors[id]
+                        ? "border-red-500 focus:ring-red-500"
+                        : "focus:ring-yellow-700"
+                    }`}
+                  />
+                  {errors[id] && (
+                    <span className="text-red-500 text-sm">{errors[id]}</span>
+                  )}
+                </div>
+              ))}
+              <button
+                type="submit"
+                className="w-full bg-yellow-700 text-white py-3 rounded-lg font-medium hover:bg-yellow-800 transition"
+              >
+                Place Order
+              </button>
             </form>
           </div>
 
           {/* Order Summary Section */}
-          <div className="bg-white p-8 shadow-md rounded-md">
-            <h2 className="text-xl font-bold mb-6">Product</h2>
-
-            {/* Order Details */}
-            <div className="mb-6">
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
+            <div className="space-y-4">
               {cartItems.length > 0 ? (
                 cartItems.map((item, index) => (
-                  <div key={index} className="flex justify-between mb-2">
+                  <div
+                    key={index}
+                    className="flex justify-between border-b pb-4 text-gray-700"
+                  >
                     <span>
                       {item.name} x {item.quantity}
                     </span>
-                    <span>Rs. {item.price * item.quantity}</span>
+                    <span className="font-medium">Rs. {item.price * item.quantity}</span>
                   </div>
                 ))
               ) : (
-                <p>Your cart is empty.</p>
+                <p className="text-gray-600">Your cart is empty.</p>
               )}
-
-              <div className="flex justify-between font-bold text-lg mt-6">
-                <span>Total</span>
-                <span className="text-orange-500">
-                  Rs. {total.toLocaleString()}
-                </span>
-              </div>
             </div>
-
-            {/* Payment Method and Place Order Button */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">Payment Method</label>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="bank"
-                    className="mr-2"
-                  />
-                  <span>Direct Bank Transfer</span>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="cod"
-                    className="mr-2"
-                  />
-                  <span>Cash On Delivery</span>
-                </div>
-              </div>
+            <div className="flex justify-between font-semibold text-lg mt-6">
+              <span>Total</span>
+              <span className="text-yellow-700">Rs. {total.toLocaleString()}</span>
             </div>
-
-            {/* Place Order Button */}
-            <button className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800">
-              Place Order
-            </button>
           </div>
         </div>
       </div>
 
-      {/* FeatureBar and Footer */}
+      {/* Toast Container */}
+      <ToastContainer />
+
       <FeatureBar />
       <Footer />
     </div>

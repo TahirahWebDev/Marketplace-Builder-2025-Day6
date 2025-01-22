@@ -14,7 +14,7 @@ const client = createClient({
 });
 
 const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const resolvedParams = await params; // Resolve the Promise
+  const resolvedParams = await params; 
   const { id } = resolvedParams;
 
   // Fetch product by ID from Sanity
@@ -42,15 +42,32 @@ const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     );
   }
 
+  // Fetch related products based on some criteria (e.g., same category)
+  const relatedProductsQuery = `
+    *[_type == "product" && _id != $id]{
+      _id,
+      title,
+      price,
+      discountPercentage,
+      isNew,
+      "productImage": productImage.asset->url,
+      stockStatus
+    }[0..4]`; // Limit to 4 related products
+
+  const relatedProducts = await client.fetch(relatedProductsQuery, { id });
+
   return (
     <div>
       <Navbar />
       <Breadcrumb product={product} />
       <ProductDetail product={product} />
-      <h1 className="mt-5 mb-0 text-4xl text-center font-semibold">
-        Related Products
+      <h1 className="mt-5 mb-0 ml-16 text-3xl font-semibold">
+        You May Also Like
       </h1>
-      <OurProducts showHeading={false} />
+      
+      {/* Display related products */}
+      <OurProducts products={relatedProducts || []} showHeading={false} />
+      
       <Footer />
     </div>
   );

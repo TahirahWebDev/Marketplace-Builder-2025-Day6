@@ -1,8 +1,10 @@
-"use client"
-import React, { useState } from 'react';
-import { FaUser, FaSearch, FaHeart, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
-import Image from 'next/image';
-import Link from 'next/link';
+"use client";
+
+import React, { useState } from "react";
+import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
+import { FaSearch, FaHeart, FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
+import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,10 +34,10 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Navbar */}
+      {/* Navbar Links */}
       <nav
         className={`absolute md:static top-[70px] left-0 w-full md:w-auto bg-white md:bg-transparent md:flex items-center md:space-x-10 flex-col md:flex-row z-50 transition-all duration-300 ${
-          isMenuOpen ? 'flex' : 'hidden'
+          isMenuOpen ? "flex" : "hidden"
         }`}
       >
         <Link href="/" className="block text-black font-medium hover:underline py-2 md:py-0">
@@ -54,10 +56,24 @@ const Navbar = () => {
 
       {/* Icons */}
       <div className="hidden md:flex items-center space-x-6 text-black">
-        <FaUser />
-        <FaSearch />
-        <FaHeart />
-        <FaShoppingCart />
+        
+        <Link href="/shop">
+          <FaSearch className="text-[20px]" />
+        </Link>
+        <Link href="/wishlist">
+          <FaHeart className="text-[20px]" />
+        </Link>
+        <Link href="/cart">
+          <FaShoppingCart className="text-[20px]" />
+        </Link>
+        <SignedIn>
+          {/* User profile for authenticated users */}
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          {/* Sign-in button for unauthenticated users */}
+          <SignInButton />
+        </SignedOut>
       </div>
     </header>
   );
